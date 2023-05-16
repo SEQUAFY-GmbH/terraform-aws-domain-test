@@ -1,0 +1,25 @@
+Start-Transcript -Append C:\PSLog.txt
+$ifIndex = (Get-NetAdapter -Name "Ethernet 2").InterfaceIndex
+net user Administrator ${password}
+$secureString = ConvertTo-SecureString ${password} -asplaintext -force
+Install-WindowsFeature -Name DNS -IncludeManagementTools
+Set-DnsServerForwarder -IPAddress "8.8.8.8" -PassThru
+Install-WindowsFeature -name AD-Domain-Services -IncludeManagementTools
+Import-Module ADDSDeployment
+Install-ADDSForest `
+-confirm:$false `
+-CreateDnsDelegation:$false `
+-DatabasePath "C:\NTDS" `
+-DomainMode "WinThreshold" `
+-DomainName ${domainname} `
+-ForestMode "WinThreshold" `
+-InstallDns:$true `
+-LogPath "C:\NTDS" `
+-NoRebootOnCompletion:$true `
+-SysvolPath "C:\Windows\SYSVOL" `
+-Force:$true `
+-SafeModeAdministratorPassword $secureString
+
+Set-DnsClientServerAddress -InterfaceIndex $ifIndex -ServerAddresses ("10.0.1.20", "10.0.1.21")
+
+Restart-Computer -Force
