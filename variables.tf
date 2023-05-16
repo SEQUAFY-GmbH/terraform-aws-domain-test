@@ -1,4 +1,4 @@
-variable "dc_promo_vars" {
+variable "domain_vars" {
   type = map(string)
   default = {
     domainname = "sequafy.local"
@@ -7,17 +7,7 @@ variable "dc_promo_vars" {
   description = "Parameters for creating the forest and domaincontrollers"
 }
 
-variable "domainjoin_vars" {
-  type = map(string)
-  default = {
-    domainname     = "sequafy.local"
-    admin_password = "sE3q28uaf4y!"
-  }
-  description = "Parameters for joining the demhost to the domain and creating a demouser"
-}
-
-variable "create_demo" {
-  type        = bool
-  default     = true
-  description = "Decide wether to create a domainjoined demohost and a demouser"
+variable "public_ip" {
+  type = string
+  default = "0.0.0.0/32"
 }

@@ -1,4 +1,3 @@
-Start-Transcript -Append C:\PSLog.txt
 $secureString = ConvertTo-SecureString ${admin_password} -asplaintext -force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "Administrator@${domainname}", $secureString
 $ifIndex = (Get-NetAdapter -Name "Ethernet 2").InterfaceIndex

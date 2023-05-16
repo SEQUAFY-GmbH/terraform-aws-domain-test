@@ -22,7 +22,7 @@ resource "aws_instance" "dc01" {
 
   user_data = "${base64encode(<<EOF
   <powershell>
-  ${templatefile("scripts/dc_forest.tftpl", var.dc_promo_vars)}
+  ${templatefile("scripts/dc_forest.tftpl", var.domain_vars)}
   </powershell>
   EOF
   )}"
@@ -49,7 +49,7 @@ resource "aws_instance" "dc02" {
 
   user_data = "${base64encode(<<EOF
   <powershell>
-  ${templatefile("scripts/dc_forest.tftpl", var.dc_promo_vars)}
+  ${templatefile("scripts/dc_forest.tftpl", var.domain_vars)}
   </powershell>
   EOF
   )}"
@@ -78,7 +78,7 @@ resource "aws_instance" "Demohost" {
   }
   user_data = "${base64encode(<<EOF
   <powershell>
-  ${templatefile("scripts/domainjoin.tftpl", var.domainjoin_vars)}
+  ${templatefile("scripts/domainjoin.tftpl", var.domain_vars)}
   </powershell>
   EOF
   )}"
@@ -102,6 +102,13 @@ resource "aws_instance" "jumper_host" {
   tags = {
     Name = "Jumper Host"
   }
+
+  user_data = "${base64encode(<<EOF
+  <powershell>
+  ${templatefile("scripts/prepare_jumper.tftpl", var.domain_vars)}
+  </powershell>
+  EOF
+  )}"
 }
 
 resource "aws_security_group" "sg_jumper" {
@@ -112,7 +119,7 @@ resource "aws_security_group" "sg_jumper" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["87.123.142.9/32"]
+    cidr_blocks = [var.public_ip]
   }
 
   egress {
