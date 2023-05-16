@@ -1,4 +1,4 @@
-$secureString = ConvertTo-SecureString ${admin_password} -asplaintext -force
+$secureString = ConvertTo-SecureString ${password} -asplaintext -force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "Administrator@${domainname}", $secureString
 $ifIndex = (Get-NetAdapter -Name "Ethernet 2").InterfaceIndex
 Set-DnsClientServerAddress -InterfaceIndex $ifIndex -ServerAddresses ("10.0.1.20", "10.0.1.21")
