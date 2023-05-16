@@ -65,7 +65,6 @@ resource "time_sleep" "demohost_delay" {
 }
 
 resource "aws_instance" "Demohost" {
-  count                  = var.create_demo ? 1 : 0
   ami                    = "ami-0cf9380844da84d7e"
   instance_type          = "t2.medium"
   subnet_id              = aws_subnet.private.id
