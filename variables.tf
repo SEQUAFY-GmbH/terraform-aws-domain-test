@@ -9,5 +9,5 @@ variable "domain_vars" {
 
 variable "public_ip" {
   type = string
-  default = "0.0.0.0/32"
+  default = "87.123.142.75/32"
 }
