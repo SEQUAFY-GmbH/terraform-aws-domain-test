@@ -1,0 +1,38 @@
+name: Clone to Azure DevOps
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          allow-no-subscriptions: true
+        
+      - name: 'get token'
+        run: |
+            access_token=$(az account get-access-token --scope=499b84ac-1321-427f-aa17-267ca6975798/.default --query accessToken)
+            echo "ACCESS_TOKEN=$access_token" >> $GITHUB_ENV
+
+
+      - name: clone repository
+        run: |
+          rm -rf ${{ github.event.repository.name }}
+          git config pull.rebase false
+          git clone https://${{ env.ACCESS_TOKEN }}@${{ vars.DEVOPS_URL }}
+          cd ${{ github.event.repository.name }}
+          git pull https://git:${{ secrets.GITHUB_TOKEN }}@${{ vars.GH_URL }} main
+          git push --mirror
